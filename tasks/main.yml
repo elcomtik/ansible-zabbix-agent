@@ -154,10 +154,25 @@
 
 - name: "Configure IPTables"
   iptables:
+    chain: "{{ zabbix_agent_firewall_chain }}"
     destination_port: "{{ zabbix_agent_listenport }}"
     source: "{{ zabbix_agent_firewall_source | default(omit) }}"
     protocol: tcp
+    ctstate: NEW
+    comment: zabbix-server
+    jump: ACCEPT
+  become: yes
   when: zabbix_agent_firewall_enable
+
+- name: "Configure Firewalld"
+  firewalld:
+    zone: "{{ zabbix_agent_firewalld_zone }}"
+    rich_rule: 'rule family="ipv4" source address="{{ zabbix_agent_firewall_source }}" port protocol="tcp" port="{{ zabbix_agent_listenport }}" accept'
+    permanent: true
+    state: enabled
+  become: yes
+  notify: reload firewalld 
+  when: zabbix_agent_firewalld_enable
 
 - name: "Make sure the zabbix-agent service is running"
   service:
