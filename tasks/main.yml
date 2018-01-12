@@ -91,6 +91,7 @@
     msg: "The agent_listenip does not exist"
   when:
     - zabbix_agent_listenip != '0.0.0.0'
+    - zabbix_agent_listenip != '127.0.0.1'
     - (zabbix_agent_listenip not in ansible_all_ipv4_addresses)
   tags:
     - zabbix-agent
@@ -194,7 +195,6 @@
     state: "{{ zabbix_create_hostgroup }}"
   when:
     - zabbix_api_create_hostgroup
-  run_once: True
   become: no
   tags:
     - api

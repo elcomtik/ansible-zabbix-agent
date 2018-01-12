@@ -20,10 +20,18 @@
     state: "{{ item.state | default('present') }}"
   become: yes
   with_items: "{{ zabbix_repo_yum }}"
+  register: yum_repo_installed
+  become: yes
   when:
     zabbix_repo == "zabbix"
   tags:
     - zabbix-agent
+
+- name: "Do a yum clean"
+  shell: yum clean all
+  when: yum_repo_installed
+  tags:
+    - skip_ansible_lint
 
 - name: "RedHat | Installing zabbix-agent"
   yum:
@@ -41,6 +49,7 @@
     state: installed
   become: yes
   when: zabbix_selinux
+  become: yes
   tags:
     - init
     - zabbix-agent
