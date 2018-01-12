@@ -18,6 +18,7 @@
     gpgcheck: "{{ item.gpgcheck }}"
     gpgkey: "{{ item.gpgkey }}"
     state: "{{ item.state | default('present') }}"
+  become: yes
   with_items: "{{ zabbix_repo_yum }}"
   when:
     zabbix_repo == "zabbix"
@@ -38,6 +39,7 @@
   yum:
     name: policycoreutils-python
     state: installed
+  become: yes
   when: zabbix_selinux
   tags:
     - init
