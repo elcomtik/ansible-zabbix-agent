@@ -1,0 +1,19 @@
+---
+
+- name: "Install userparameters for firewall"
+  include: "userparameter_firewall.yml"
+  when:
+    - "'firewalls' in group_names"
+  tags:
+    - config
+    - userparameters
+
+- name: "Install userparameters for S.M.A.R.T discovery"
+  include: "userparameter_smartctl.yml"
+  when:
+    - "'dedicated' in group_names"
+  tags:
+    - config
+    - userparameters
+
+

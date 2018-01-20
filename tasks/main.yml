@@ -17,6 +17,7 @@
   include_vars: "{{ ansible_os_family }}.yml"
   tags:
     - zabbix-agent
+    - userparameters
 
 - name: "Install the correct repository"
   include: "RedHat.yml"
@@ -152,6 +153,12 @@
   tags:
     - config
     - include
+
+- name: "Install zabbix userparameters"
+  include: userparameters.yml
+  tags:
+    - config
+    - userparameters
 
 - name: "Configure IPTables"
   iptables:

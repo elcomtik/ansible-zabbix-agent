@@ -1,0 +1,78 @@
+---
+
+- name: "Installing smartctl userparameters"
+  copy:                                                                                                                                                
+    src: userparameter_smartctl.conf
+    dest: "{{ zabbix_agent_include }}/userparameter_smartctl.conf"
+    owner: zabbix
+    group: zabbix
+    mode: 0755
+  notify: restart zabbix-agent
+  become: yes
+
+- name: "Install smartmontools"
+  yum: 
+    name: "{{ item }}" 
+    state: present
+  with_items: 
+    - smartmontools
+    - sg3_utils
+  become: yes
+
+- name: "Installing zabbix_smartctl cron"
+  copy:                                                                                                                                                
+    src: cron_zabbix_smartctl
+    dest: "/etc/cron.d/zabbix_smartctl"
+    owner: root
+    group: root
+    mode: 0544
+  become: yes
+
+- name: "Create directory for zabbix-agent"
+  file: path=/usr/local/sbin/zabbix-agent state=directory
+  become: yes
+
+- name: "Installing smartdiscovery.sh"
+  copy:                                                                                                                                                
+    src: smartdiscovery.sh
+    dest: "/usr/local/sbin/zabbix-agent/smartdiscovery.sh"
+    owner: zabbix
+    group: zabbix
+    mode: 0750
+  become: yes
+
+- name: "Installing zabbix_smart_discovery.sh"
+  copy:                                                                                                                                                
+    src: zabbix_smart_discovery.sh
+    dest: "/usr/local/sbin/zabbix-agent/zabbix_smart_discovery.sh"
+    owner: zabbix
+    group: zabbix
+    mode: 0750
+  become: yes
+
+- name: "Installing smart2zabbix.sh"
+  copy:                                                                                                                                                
+    src: smart2zabbix.sh
+    dest: "/usr/local/sbin/zabbix-agent/smart2zabbix.sh"
+    owner: zabbix
+    group: zabbix
+    mode: 0750
+  become: yes
+
+- name: "Installing zabbix_smartctl.sh"
+  copy:                                                                                                                                                
+    src: zabbix_smartctl.sh
+    dest: "/usr/local/sbin/zabbix-agent/zabbix_smartctl.sh"
+    owner: zabbix
+    group: zabbix
+    mode: 0750
+  become: yes
+
+- name: "Granting sudo to zabbix-agent_smartctl" 
+  copy:                                                                                                                                                
+    src: sudo_zabbix-agent_smartctl
+    dest: "/etc/sudoers.d/zabbix-agent_smartctl"
+    owner: root
+    group: root
+    mode: 0440
+  become: yes

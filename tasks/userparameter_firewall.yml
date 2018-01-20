@@ -1,0 +1,11 @@
+---
+
+- name: "Installing firewall userparameters"
+  copy:                                                                                                                                                
+    src: userparameter_firewall.conf
+    dest: "{{ zabbix_agent_include }}/userparameter_firewall.conf"
+    owner: zabbix
+    group: zabbix
+    mode: 0755
+  notify: restart zabbix-agent
+  become: yes
